@@ -1,8 +1,6 @@
 const express = require("express");
-
-const router = express.Router();
-
 const post = require("./postDb.js");
+const router = express.Router();
 
 router.get("/", async (req, res) => {
   const allPosts = await post.get();
