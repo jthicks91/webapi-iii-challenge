@@ -5,10 +5,10 @@ const router = express.Router();
 
 const USERPOSTCHECK = [validateUserId, validatePost];
 
-router.post("/", validatePost, async (req, res) => {
+router.post("/", validateUser, async (req, res) => {
   try {
-    const user = await users.insert(req.body);
-    res.status(201).json(user);
+    const post = await users.insert(req.body);
+    res.status(201).json(post);
   } catch (error) {
     // log error to server
     console.log(error);
@@ -46,7 +46,18 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", validateUserId, async (req, res) => {
-  res.status(200).json(req.hub);
+  try {
+    const { id } = await users.getById(req.params.id);
+    if (id) {
+      res.status(200).json(req.user);
+    } else {
+      res.status(400).json({ message: "user with this ID could not be found" });
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "couldnt retrieve that user with that specified ID" });
+  }
 });
 
 router.get("/:id/posts", validateUserId, async (req, res) => {
@@ -62,9 +73,39 @@ router.get("/:id/posts", validateUserId, async (req, res) => {
   }
 });
 
-router.delete("/:id", validateUserId, async (req, res) => {});
+router.delete("/:id", validateUserId, async (req, res) => {
+  try {
+    const count = await users.remove(req.params.id);
+    if (count > 0) {
+      res.status(200).json({ message: "The user has been nuked" });
+    } else {
+      res.status(404).json({ message: "The user could not be found" });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: "Error removing the user"
+    });
+  }
+});
 
-router.put("/:id", validateUserId, async (req, res) => {});
+router.put("/:id", validateUserId, async (req, res) => {
+  try {
+    const updatedUser = await users.update(req.params.id, req.body);
+    if (updatedUser) {
+      res.status(200).json(updatedUser);
+    } else {
+      res.status(404).json({ message: "error updating user" });
+    }
+  } catch (error) {
+    // log error to server
+    console.log(error);
+    res.status(500).json({
+      message: "could not update user"
+    });
+  }
+});
 
 //custom middleware
 async function validateUserId(req, res, next) {
@@ -75,11 +116,11 @@ async function validateUserId(req, res, next) {
       req.user = userId;
       next();
     } else {
-      next({ message: "user with id: ${id} could not be found" });
-      // res.status(404).json({ message: "Hub not found; invalid id" });
+      res.status(404).json({ message: "invalid user id" });
+      next();
     }
   } catch (err) {
-    res.status(500).json({ message: "Failed to validate user with that id" });
+    res.status(500).json({ message: "error validating user" });
   }
 }
 
@@ -99,6 +140,7 @@ function validatePost(req, res, next) {
     next();
   } else if (!req.body.text) {
     res.status(400).json({ message: "missing required text field" });
+    next();
   }
 }
 
