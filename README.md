@@ -10,12 +10,12 @@ You are allowed, and **encouraged**, to collaborate with other peers. Please fol
 
 ## Project Set Up
 
-- [ ] Create a forked copy of this project.
-- [ ] Add your project manager as collaborator on Github.
-- [ ] Clone your OWN version of the repository.
-- [ ] Create a new branch: git checkout -b `<firstName-lastName>`.
-- [ ] Implement the project on your newly created `<firstName-lastName>` branch, committing changes regularly.
-- [ ] Push commits: git push origin `<firstName-lastName>`.
+- [ x] Create a forked copy of this project.
+- [ x] Add your project manager as collaborator on Github.
+- [ x] Clone your OWN version of the repository.
+- [ x] Create a new branch: git checkout -b `<firstName-lastName>`.
+- [ x] Implement the project on your newly created `<firstName-lastName>` branch, committing changes regularly.
+- [ x] Push commits: git push origin `<firstName-lastName>`.
 
 Follow these steps for completing your project.
 
@@ -96,3 +96,5 @@ We have provided test data for the resources.
   - From the React application connect to the `/api/users` endpoint in the API and show the list of users.
   - Add functionality to show the details of a user, including their posts, when clicking a user name in the list. Use React Router to navigate to a `/users/:id` route to show the user details.
   - Add styling!
+
+initial commit 
